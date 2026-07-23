@@ -1,0 +1,9 @@
+import type React from 'react';
+import { X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import type { AppShortcut } from '../types';
+const favicon = (url: string) => `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=128`;
+export function AppModal({ initial, onClose, onSave }: { initial?: AppShortcut; onClose: () => void; onSave: (app: AppShortcut) => void }) {
+ const save=(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();const f=new FormData(e.currentTarget);const urlRaw=String(f.get('url')||'').trim();const url=urlRaw.startsWith('http')?urlRaw:`https://${urlRaw}`;const icon=String(f.get('icon')||'').trim();onSave({id:initial?.id??crypto.randomUUID(),title:String(f.get('title')||'Untitled'),url,iconUrl:icon||favicon(url),iconType:icon?'custom':'favicon'});};
+ return <div className="fixed inset-0 z-40 grid place-items-center bg-slate-950/55 p-4 backdrop-blur-md"><motion.form initial={{opacity:0,scale:.96,y:20}} animate={{opacity:1,scale:1,y:0}} onSubmit={save} className="w-full max-w-md rounded-[2rem] border border-white/20 bg-white/15 p-6 text-white shadow-glow backdrop-blur-2xl"><div className="mb-5 flex items-center justify-between"><h2 className="text-2xl font-semibold">{initial?'Edit site':'Add favorite site'}</h2><button type="button" onClick={onClose}><X/></button></div>{['title','url','icon'].map((name)=><label key={name} className="mb-4 block text-sm capitalize text-white/70">{name === 'icon' ? 'Custom icon URL (optional)' : name}<input name={name} required={name!=='icon'} defaultValue={name==='title'?initial?.title:name==='url'?initial?.url:initial?.iconType==='custom'?initial.iconUrl:''} className="mt-2 w-full rounded-2xl border border-white/15 bg-white/15 px-4 py-3 text-white outline-none placeholder:text-white/40" /></label>)}<button className="w-full rounded-2xl bg-white px-4 py-3 font-semibold text-slate-950">Save</button></motion.form></div>;
+}

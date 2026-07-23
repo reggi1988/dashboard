@@ -1,0 +1,2 @@
+import { useClock } from '../hooks/useClock';
+export function Clock({ use24Hour }: { use24Hour: boolean }) { const now = useClock(); return <div className="text-center text-white drop-shadow-2xl"><div className="text-7xl font-light tracking-tight md:text-8xl">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: !use24Hour })}</div><div className="mt-3 text-xl text-white/75">{now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}</div></div>; }
